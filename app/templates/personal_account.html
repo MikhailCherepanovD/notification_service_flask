@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Tracker</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            width: 98%;
+            max-width: 2000px;
+            height: 90%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container1 {
+            width: 2000px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+
+        .tile {/* управляет размером карточки */
+
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e9ecef;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #6c757d;
+        }
+
+        .tile.add {
+
+            font-size: 3em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .tile.route {
+            flex-direction: column;
+            text-align: center;
+            padding: 10px;
+        }
+
+
+        .modal {
+            display: none;
+            position: fixed;
+            height: 500px;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+             width: 100%;
+
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .modal-content label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        .modal-content input {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background: #0056b3;
+        }
+        .delete-route {
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            background-color: #AFEEEE; /* Красный фон */
+            color: black; /* Белый текст */
+            border: none; /* Убираем рамку */
+            border-radius: 5px; /* Скругленные углы */
+            font-size: 1em; /* Размер текста */
+            cursor: pointer; /* Курсор в виде руки при наведении */
+            transition: background-color 0.3s ease; /* Плавный переход для фона */
+            margin-top: auto;
+        }
+
+        .delete-route:hover {
+            background-color: #7FFFD4;
+        }
+
+        .delete-route:focus {
+            outline: none; /* Убираем обводку при фокусе */
+        }
+
+
+        .checkbox-container label {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .checkbox-container input[type="checkbox"] {
+            margin-top: 0; /* Убирает лишний отступ сверху */
+            margin-bottom: 0; /* Убирает лишний отступ снизу */
+        }
+        .radio-container label {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            font-weight: normal; /* Обычный текст */
+        }
+
+
+        .radio-container input[type="radio"] {
+            margin-top: 0; /* Убирает лишний отступ сверху */
+            margin-bottom: 0; /* Убирает лишний отступ снизу */
+        }
+
+
+
+        .link_inner {
+            display: block; /* Ссылки занимают всю строку */
+            text-align: left;
+            margin-bottom: 5px; /* Отступ между ссылками */
+            text-decoration: none; /* Убирает подчеркивание */
+            color: #007bff; /* Цвет ссылок */
+            font-size: 0.8em; /* Уменьшаем размер текста */
+        }
+         .link_outer {
+            display: block; /* Ссылки занимают всю строку */
+            text-align: left;
+            margin-bottom: 5px; /* Отступ между ссылками */
+            text-decoration: none; /* Убирает подчеркивание */
+            color: #007bff; /* Цвет ссылок */
+            font-size: 1.2em; /* Уменьшаем размер текста */
+        }
+      .flex-start-end {
+            display: flex;
+            justify-content: space-between; /* Распределяет элементы на максимальное расстояние */
+            align-items: center; /* Центрирует элементы по вертикали */
+            width: 80%; /* Контейнер будет занимать 80% ширины внешнего контейнера */
+            margin: 0 auto; /* Центрирует контейнер по горизонтали */
+        }
+        .column-right {
+            display: flex;
+            flex-direction: column; /* Располагаем элементы в столбик */
+            align-items: flex-end; /* Выравниваем элементы по правому краю */
+        }
+    </style>
+</head>
+<body>
+  <div class="form-container1" id="routes-container">
+
+    <div class="flex-start-end">
+        <h2>Мои маршруты</h2>
+        <div class="column-right">
+            <div><a href="/user_info" class="link_outer" id="profile">Профиль</a></div>
+            <div><a href="/" class="link_outer" id="exit">Выход</a></div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tile add" id="addTile">+</div>
+    </div>
+
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <h2>Добавить маршрут</h2>
+            <label for="from">Откуда:</label>
+            <input type="text" id="from" placeholder="Город отправления">
+
+            <label for="to">Куда:</label>
+            <input type="text" id="to" placeholder="Город назначения">
+
+
+            <div class="checkbox-container">
+                <label>
+                    Искать только без пересадки
+                    <input type="checkbox" id="directOnly">
+                </label>
+            </div>
+
+            <div class="radio-container">
+                <label><strong>Частота проверки:</strong></label>
+                <label>Каждый час
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input type="radio" name="frequency" value="1" checked> </label>
+                <label>Каждые 6 часов
+                     <span>&nbsp;&nbsp;</span>
+                    <input type="radio" name="frequency" value="6"> </label>
+                <label>Каждые 12 часов<input type="radio" name="frequency" value="12"> </label>
+                <label>Каждые 24 часа
+                      <span>&nbsp;&nbsp;&nbsp;</span>
+                    <input type="radio" name="frequency" value="24"> </label>
+                <label>Раз в 2 дня
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input type="radio" name="frequency" value="48"> </label>
+                <label>Раз в неделю
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input type="radio" name="frequency" value="168"> </label>
+            </div>
+
+            <button id="addRoute">Добавить</button>
+        </div>
+    </div>
+</div>
+    <script>
+        const addTile = document.getElementById('addTile');
+        const addModal = document.getElementById('addModal');
+        const addRouteButton = document.getElementById('addRoute');
+        const container = document.querySelector('.container');
+
+        addTile.addEventListener('click', () => {
+            addModal.style.display = 'flex';
+        });
+
+        addRouteButton.addEventListener('click', () => {
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+
+            const directOnly = document.getElementById('directOnly').checked ? 'Только без пересадок' : '';
+            const frequency = document.querySelector('input[name="frequency"]:checked').value;
+
+            const selectedFrequencyLabel = document.querySelector('input[name="frequency"]:checked').parentElement.textContent.trim();
+            if (from && to) {
+                const routeTile = document.createElement('div');
+                routeTile.className = 'tile route';
+                routeTile.innerHTML = `
+                    <strong>${from} → ${to}</strong><br>
+                    <small>${directOnly}</small><br>
+
+                    <small>Частота проверки: ${selectedFrequencyLabel}</small>
+                    <a href="/ticket_data/cheapest" class="link_inner" id="current">Самый дешовый билет сейчас</a>
+                    <a href="/ticket_data/current" class="link_inner" id="cheapest">Самый дешовый билет за время наблюдения</a>
+                    <a href="/ticket_data/statistic" class="link_inner" id="statistic">Статистика</a>
+                    <button class="delete-route">Удалить маршрут</button>
+                `;
+
+                container.insertBefore(routeTile, addTile);
+
+                routeTile.querySelector('.delete-route').addEventListener('click', () => {
+                    if (confirm('Вы уверены, что хотите удалить этот маршрут?')) {
+                        routeTile.remove();
+                    }
+                });
+
+                document.getElementById('from').value = '';
+                document.getElementById('to').value = '';
+
+                document.getElementById('directOnly').checked = false;
+                document.querySelector('input[name="frequency"][value="24"]').checked = true;
+
+                addModal.style.display = 'none';
+            } else {
+                alert('Заполните поля "Город отправления" и "Город назначения"!');
+            }
+        });
+
+        addModal.addEventListener('click', (e) => {
+            if (e.target === addModal) {
+                addModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

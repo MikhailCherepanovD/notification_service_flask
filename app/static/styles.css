@@ -1,0 +1,116 @@
+/* Основные стили */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+/* Контейнер для кнопок на главной странице */
+.container_index {
+    text-align: center;
+}
+
+/* Стили кнопок */
+.button {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px 10px 10px 10px;
+    font-size: 1.2em;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.button1 {
+
+    padding: 10px 20px;
+    margin: 10px 10px 10px 10px;
+    font-size: 1.2em;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для формы */
+.form-container {
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.form-container1 {
+    width: 1600px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+input[type="text"], input[type="password"] {
+    font-size: 1.2em;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    font-size: 1.5em;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+
+.form-row {
+  display: flex;
+  gap: 20px; /* Расстояние между колонками */
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column; /* Расположение лейбла над полем */
+}
+
+
+.input-group1 label {
+   display: block; /* Обеспечивает выравнивание по левому краю */
+   text-align: left; /* Текст внутри выравнивается по левому краю */
+   margin: 5px 0; /* Отступы между элементами */
+}
+
+.input-group1 .link {
+
+    display: block; /* Ссылки занимают всю строку */
+    text-align: left;
+    margin-bottom: 10px; /* Отступ между ссылками */
+    text-decoration: none; /* Убирает подчеркивание */
+    color: #007bff; /* Цвет ссылок */
+}

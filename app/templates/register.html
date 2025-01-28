@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+      <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .form-container {
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="password"] {
+            font-size: 1.2em;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button[type="submit"] {
+            font-size: 1.5em;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px; /* Отступы вокруг кнопки */
+            transition: background-color 0.3s ease; /* Плавный переход цвета */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Новый цвет при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Регистрация</h2>
+         <!-- Отображение сообщения об ошибке, если оно передано -->
+        {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+        {% endif %}
+        <form action="/register" method="post">
+            <label for="username">Ваше имя:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" >
+
+            <label for="telegram">Telegram:</label>
+            <input type="text" id="telegram" name="telegram" >
+
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="repeat_password">Повторите пароль:</label>
+            <input type="password" id="repeat_password" name="repeat_password" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</body>
+</html>

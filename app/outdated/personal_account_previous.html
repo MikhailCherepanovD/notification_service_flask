@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Маршруты</title>
+  <link rel="stylesheet" href="/static/styles.css"> <!-- Подключение существующего CSS -->
+</head>
+<body>
+  <div class="form-container1" id="routes-container">
+    <div class="route">
+      <h2>Маршрут</h2>
+      <form>
+          <div class="form-row">
+              <div class="input-group">
+                <label for="from">Откуда:</label>
+                <input type="text" id="from" placeholder="Откуда" required>
+              </div>
+              <div class="input-group">
+                <label for="to">Куда:</label>
+                <input type="text" id="to" placeholder="Куда" required>
+              </div>
+              <div class="input-group">
+                  <label for="not_transfer">Только без пересадок:</label>
+                  <label for="not_transfer">  </label>
+                  <input type="checkbox" id="not_transfer">
+              </div>
+               <div class="input-group1">
+                   <label>Частота проверки</label>
+                    <label><input type="radio" name="frequency" value="hourly"> Каждый час</label>
+                    <label><input type="radio" name="frequency" value="12_hours"> Каждые 12 часов</label>
+                    <label><input type="radio" name="frequency" value="2_days"> Раз в 2 дня</label>
+              </div>
+              <div class="input-group1">
+                    <label style="display: block; margin-top: 27px;">
+                     <label><input type="radio" name="frequency" value="6_hours"> Каждые 6 часов</label>
+                    <label><input type="radio" name="frequency" value="24_hours"> Каждые 24 часа</label>
+                    <label><input type="radio" name="frequency" value="weekly"> Раз в неделю</label>
+              </div>
+
+<!--              <div class="input-group1">-->
+<!--                    <a href="/user_info" class="link" id="current">Самый дешовый билет сейчас</a>-->
+<!--                    <a href="/user_info" class="link" id="cheapest">Самый дешовый билет за время наблюдения</a>-->
+<!--                    <a href="/user_info" class="link" id="statistic">Статистика</a>-->
+<!--              </div>-->
+          </div>
+      </form>
+    </div>
+  </div>
+  <div class="container">
+    <button class="button" id="new-route-btn">Новый маршрут</button>
+  </div>
+
+  <script>
+    const newRouteBtn = document.getElementById('new-route-btn');
+    const routesContainer = document.getElementById('routes-container');
+
+    newRouteBtn.addEventListener('click', () => {
+      const routeTemplate = `
+        <div class="route">
+          <h2>Маршрут</h2>
+          <form>
+              <div class="form-row">
+                  <div class="input-group">
+                    <label for="from">Откуда:</label>
+                    <input type="text" id="from" placeholder="Откуда" required>
+                  </div>
+                  <div class="input-group">
+                    <label for="to">Куда:</label>
+                    <input type="text" id="to" placeholder="Куда" required>
+                  </div>
+              </div>
+          </form>
+        </div>
+      `;
+
+      const newRoute = document.createElement('div');
+      newRoute.innerHTML = routeTemplate;
+      routesContainer.appendChild(newRoute.firstElementChild);
+
+      // Перемещаем кнопку "Новый маршрут" вниз
+      routesContainer.parentElement.appendChild(newRouteBtn);
+    });
+  </script>
+</body>
+</html>

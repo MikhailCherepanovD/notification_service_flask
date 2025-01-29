@@ -2,9 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Current</title>
+    <title>Cheapest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+        }
+        .ticket {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .ticket a {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+        }
+    </style>
 </head>
 <body>
-<h1>Current</h1>
+    <h1>Current</h1>
+
+    {% if json_data %}
+        <div class="ticket">
+            <p><strong>Авиакомпания:</strong> {{ json_data.airline }}</p>
+            <p><strong>Рейс:</strong> {{ json_data.flight_number }}</p>
+            <p><strong>Отправление:</strong> {{ json_data.departure_at }}</p>
+            <p><strong>Откуда:</strong> {{ json_data.origin }} ({{ json_data.origin_airport }})</p>
+            <p><strong>Куда:</strong> {{ json_data.destination }} ({{ json_data.destination_airport }})</p>
+            <p><strong>Цена:</strong> {{ json_data.price }} ₽</p>
+            <p><strong>Длительность:</strong> {{ json_data.duration_to }} мин</p>
+            <p><a href="{{ json_data.link }}" target="_blank">Ссылка на билет</a></p>
+        </div>
+    {% else %}
+        <p>Информация о билетах отсутствует</p>
+    {% endif %}
+
 </body>
 </html>

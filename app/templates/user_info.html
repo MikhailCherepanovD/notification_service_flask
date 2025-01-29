@@ -69,8 +69,7 @@
 <body>
   <div class="form-container">
 
-
-            <h1>Персональные данные</h1>
+    <h1>Персональные данные</h1>
     <form action="/user_info" method="post" onsubmit="return confirmAction(event)">
         <label for="username">Ваше имя:</label>
         <input type="text" id="username" name="username" value="{{ user_info_strs[0] }}" required>
@@ -83,6 +82,11 @@
 
         <label for="login">Логин:</label>
         <input type="text" id="login" name="login" value="{{ user_info_strs[3] }}" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="repeat_password">Повторите пароль:</label>
+        <input type="password" id="repeat_password" name="repeat_password" required>
 
         <!-- Кнопка для обновления -->
         <button type="submit" name="action" value="update" onclick="return confirm('Вы уверены, что хотите обновить информацию? Предыдущая информация будет утеряна')">Обновить информацию</button>

@@ -2,9 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>statistic</title>
+    <title>Cheapest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+        }
+        .ticket {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .ticket a {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+        }
+    </style>
 </head>
 <body>
-<h1>Statistic</h1>
+<div class="container">
+    <h1>Statistic</h1>
+    {% if json_data %}
+        {% for ticket in json_data %}
+        <div class="ticket">
+            <p><strong>Авиакомпания:</strong> {{ ticket.airline }}</p>
+            <p><strong>Рейс:</strong> {{ ticket.flight_number }}</p>
+            <p><strong>Отправление:</strong> {{ ticket.origin }} ({{ ticket.origin_airport }})</p>
+            <p><strong>Прибытие:</strong> {{ ticket.destination }} ({{ ticket.destination_airport }})</p>
+            <p><strong>Время вылета:</strong> {{ ticket.departure_at }}</p>
+            <p><strong>Длительность:</strong> {{ ticket.duration }} мин.</p>
+            <p><strong>Цена:</strong> {{ ticket.price }} RUB</p>
+            <a href="{{ ticket.link }}" target="_blank">Купить билет</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Информация о билетах отсутствует.</p>
+    {% endif %}
+</div>
 </body>
 </html>

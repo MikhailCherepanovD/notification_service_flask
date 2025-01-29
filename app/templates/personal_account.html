@@ -39,7 +39,7 @@
 
         .tile {/* управляет размером карточки */
 
-            height: 250px;
+            height: 290px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -184,6 +184,14 @@
             color: #007bff; /* Цвет ссылок */
             font-size: 1.2em; /* Уменьшаем размер текста */
         }
+         .link_centre {
+            display: block; /* Ссылки занимают всю строку */
+            text-align: centre;
+            margin-bottom: 5px; /* Отступ между ссылками */
+            text-decoration: none; /* Убирает подчеркивание */
+            color: #007bff; /* Цвет ссылок */
+            font-size: 1.2em; /* Уменьшаем размер текста */
+        }
       .flex-start-end {
             display: flex;
             justify-content: space-between; /* Распределяет элементы на максимальное расстояние */
@@ -196,66 +204,165 @@
             flex-direction: column; /* Располагаем элементы в столбик */
             align-items: flex-end; /* Выравниваем элементы по правому краю */
         }
+        /* Слой для блокировки взаимодействия */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Слой поверх всего */
+        }
+
+        /* Кружок с загрузкой */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-  <div class="form-container1" id="routes-container">
+    <div id="overlay" style="display: none;">
+        <div class="loader"></div> <!-- Кружок с загрузкой -->
+    </div>
+    <div class="form-container1" id="routes-container">
 
-    <div class="flex-start-end">
-        <h2>Мои маршруты</h2>
-        <div class="column-right">
-            <div><a href="/user_info" class="link_outer" id="profile">Профиль</a></div>
-            <div><a href="/" class="link_outer" id="exit">Выход</a></div>
+        <div class="flex-start-end">
+            <h2>Мои маршруты</h2>
+            <div class="column-right">
+                <div><a href="/user_info" class="link_outer" id="profile">Профиль</a></div>
+                <div><a href="/" class="link_outer" id="exit">Выход</a></div>
 
+            </div>
+        </div>
+
+        <div class="container">
+
+            {% for route in routes %}
+               <div class="tile route">
+                        <input type="hidden" class="route-id" value="{{ route.id }}">
+                        <strong>{{ route.start_city }} → {{ route.finish_city }}</strong><br>
+                        <small>{{ route.transfers_are_allowed }}</small><br>
+                        <small>От {{ route.start_time }} до {{ route.finish_time }}</small><br>
+                        <small>Частота проверки: {{ route.frequency_monitoring }}</small>
+                        <a href="/ticket_data/current?route_id={{ route.id }}" class="link_inner" id="current">
+                            Самый дешёвый билет сейчас
+                        </a>
+                        <a href="/ticket_data/cheapest?route_id={{ route.id }}" class="link_inner" id="cheapest">
+                            Самый дешёвый билет за время наблюдения</a>
+                        <a href="/ticket_data/statistic?route_id={{ route.id }}" class="link_inner" id="statistic">
+                            Статистика</a>
+                        <button class="delete-route">Удалить маршрут</button>
+               </div>
+            {% endfor %}
+            <div class="tile add" id="addTile">+</div>
+        </div>
+
+        <div class="modal" id="addModal">
+            <div class="modal-content">
+                <h2>Добавить маршрут</h2>
+                <label for="from">Откуда:</label>
+                <input type="text" id="from" placeholder="Город отправления">
+
+                <label for="to">Куда:</label>
+                <input type="text" id="to" placeholder="Город назначения">
+
+                <label for="to">Начало отслеживания:</label>
+                <input type="date" id="date_begin" name="date">
+
+                <label for="to">Конец отслеживания:</label>
+                <input type="date" id="date_end" name="date">
+
+                <div class="checkbox-container">
+                    <label>
+                        Искать только без пересадок
+                        <input type="checkbox" id="directOnly">
+                    </label>
+                </div>
+
+                <div class="radio-container">
+                    <label><strong>Частота проверки:</strong></label>
+                    <label>Каждый час
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <input type="radio" name="frequency" value="1" checked> </label>
+                    <label>Каждые 6 часов
+                         <span>&nbsp;&nbsp;</span>
+                        <input type="radio" name="frequency" value="6"> </label>
+                    <label>Каждые 12 часов<input type="radio" name="frequency" value="12"> </label>
+                    <label>Каждые 24 часа
+                          <span>&nbsp;&nbsp;&nbsp;</span>
+                        <input type="radio" name="frequency" value="24"> </label>
+                    <label>Раз в 2 дня
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <input type="radio" name="frequency" value="48"> </label>
+                    <label>Раз в неделю
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <input type="radio" name="frequency" value="168"> </label>
+                </div>
+
+                <button id="addRoute">Добавить</button>
+                <a class="link_centre" id="close">Закрыть</a>
+            </div>
         </div>
     </div>
-
-    <div class="container">
-        <div class="tile add" id="addTile">+</div>
-    </div>
-
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <h2>Добавить маршрут</h2>
-            <label for="from">Откуда:</label>
-            <input type="text" id="from" placeholder="Город отправления">
-
-            <label for="to">Куда:</label>
-            <input type="text" id="to" placeholder="Город назначения">
-
-
-            <div class="checkbox-container">
-                <label>
-                    Искать только без пересадки
-                    <input type="checkbox" id="directOnly">
-                </label>
-            </div>
-
-            <div class="radio-container">
-                <label><strong>Частота проверки:</strong></label>
-                <label>Каждый час
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <input type="radio" name="frequency" value="1" checked> </label>
-                <label>Каждые 6 часов
-                     <span>&nbsp;&nbsp;</span>
-                    <input type="radio" name="frequency" value="6"> </label>
-                <label>Каждые 12 часов<input type="radio" name="frequency" value="12"> </label>
-                <label>Каждые 24 часа
-                      <span>&nbsp;&nbsp;&nbsp;</span>
-                    <input type="radio" name="frequency" value="24"> </label>
-                <label>Раз в 2 дня
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <input type="radio" name="frequency" value="48"> </label>
-                <label>Раз в неделю
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <input type="radio" name="frequency" value="168"> </label>
-            </div>
-
-            <button id="addRoute">Добавить</button>
-        </div>
-    </div>
-</div>
     <script>
+
+          // Функция для удаления маршрута
+        function deleteRoute(routeTile) {
+            if (confirm('Вы уверены, что хотите удалить этот маршрут?')) {
+                var routeId = routeTile.querySelector('.route-id').value;
+                var routes = "routes"
+                fetch(routes, {  // Используем текущий URL
+                    method: 'DELETE',  // Метод запроса — DELETE
+                    headers: {
+                        'Content-Type': 'application/json'  // Тип данных, которые мы отправляем
+                    },
+                    body: JSON.stringify({
+                       id:routeId
+                    })
+                })
+                .then(response => {
+                    if (response.status === 200) {
+
+                        routeTile.remove();  // Ожидаем ответа от сервера, если статус 200
+                    } else {
+                        alert('Не удалось удалить маршрут');
+                    }
+                });
+            }
+        }
+
+
+        // Добавление обработчиков событий после загрузки страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-route');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const routeTile = button.closest('.tile.route'); // Находим родительский элемент маршрута
+                    deleteRoute(routeTile); // Удаляем маршрут
+                });
+            });
+        });
+
+                // Закрытие окна при клике на кнопку "Закрыть"
+        const closeButton = document.getElementById('close');
+        closeButton.addEventListener('click', () => {
+            addModal.style.display = 'none'; // Скрываем окно
+        });
         const addTile = document.getElementById('addTile');
         const addModal = document.getElementById('addModal');
         const addRouteButton = document.getElementById('addRoute');
@@ -265,53 +372,150 @@
             addModal.style.display = 'flex';
         });
 
-        addRouteButton.addEventListener('click', () => {
+       addRouteButton.addEventListener('click', () => {
             const from = document.getElementById('from').value;
             const to = document.getElementById('to').value;
 
             const directOnly = document.getElementById('directOnly').checked ? 'Только без пересадок' : '';
             const frequency = document.querySelector('input[name="frequency"]:checked').value;
-
             const selectedFrequencyLabel = document.querySelector('input[name="frequency"]:checked').parentElement.textContent.trim();
+
+            const dateBegin = document.getElementById('date_begin').value;
+            const dateEnd = document.getElementById('date_end').value;
+
+            // Получаем текущую дату
+            const today = new Date();
+            const twoYearsLater = new Date();
+            twoYearsLater.setFullYear(today.getFullYear() + 2);
+
+            // Функция для проверки корректности дат
+            function isValidDate(dateString) {
+                const date = new Date(dateString);
+                return (
+                    date instanceof Date &&
+                    !isNaN(date) && // Проверяем, что дата валидная
+                    date.toISOString().split('T')[0] === dateString // Проверяем, что дата совпадает с вводом
+                );
+            }
+
+            // Проверяем заполненность дат
+            if (!dateBegin || !dateEnd) {
+                alert('Пожалуйста, заполните обе даты: начало и конец отслеживания.');
+                return;
+            }
+
+            // Проверяем валидность дат
+            if (!isValidDate(dateBegin) || !isValidDate(dateEnd)) {
+                alert('Одна из дат некорректна. Убедитесь, что даты введены правильно.');
+                return;
+            }
+
+            const beginDate = new Date(dateBegin);
+            const endDate = new Date(dateEnd);
+
+            // Проверка: дата начала >= текущая и <= через 2 года
+            if (beginDate < today || beginDate > twoYearsLater) {
+                alert('Дата начала должна быть не раньше текущей и не позднее чем через 2 года.');
+                return;
+            }
+
+            // Проверка: дата конца >= дата начала
+            if (endDate < beginDate) {
+                alert('Дата окончания не может быть раньше даты начала.');
+                return;
+            }
+
+            // Проверка: разница между датами <= 6 месяцев
+            const sixMonthsLater = new Date(beginDate);
+            sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+            if (endDate > sixMonthsLater) {
+                alert('Разница между датой начала и окончания не должна превышать 6 месяцев.');
+                return;
+            }
+
+            // Если все проверки пройдены, добавляем маршрут
             if (from && to) {
-                const routeTile = document.createElement('div');
-                routeTile.className = 'tile route';
-                routeTile.innerHTML = `
-                    <strong>${from} → ${to}</strong><br>
-                    <small>${directOnly}</small><br>
 
-                    <small>Частота проверки: ${selectedFrequencyLabel}</small>
-                    <a href="/ticket_data/cheapest" class="link_inner" id="current">Самый дешовый билет сейчас</a>
-                    <a href="/ticket_data/current" class="link_inner" id="cheapest">Самый дешовый билет за время наблюдения</a>
-                    <a href="/ticket_data/statistic" class="link_inner" id="statistic">Статистика</a>
-                    <button class="delete-route">Удалить маршрут</button>
-                `;
+                var routes = "routes"
+                const overlay = document.getElementById('overlay');
 
-                container.insertBefore(routeTile, addTile);
+                fetch(routes, {  // URL
+                    method: 'POST',  // Метод запроса
+                    headers: {
+                        'Content-Type': 'application/json'  // Тип данных, которые мы отправляем
+                    },
+                    body: JSON.stringify({
+                        from: from,
+                        to: to,
+                        directOnly: directOnly,
+                        dateBegin: dateBegin,
+                        dateEnd: dateEnd,
+                        frequency: selectedFrequencyLabel
+                    })
+                })
+                .then(response => {
 
-                routeTile.querySelector('.delete-route').addEventListener('click', () => {
-                    if (confirm('Вы уверены, что хотите удалить этот маршрут?')) {
-                        routeTile.remove();
+                    if (response.status === 201) {
+                        return response.json();  // Парсим тело ответа как JSON
+                    } else if (response.status === 204) {
+                        throw new Error('Не удалось найти билетов на указанные даты.');
+                    } else if (response.status === 400) {
+                        throw new Error('Указанных городов нет в нашей базе.');
+                    } else {
+                        throw new Error(response.status);
                     }
+                })
+                .then(data => {
+                    overlay.style.display = 'none';
+                    // Доступ к полю "id" из JSON
+                    console.log("ID из ответа:", data.id);  // Предположим, что в JSON есть поле "id"
+                    var returnedRouteId = data.id;
+                    const routeTile = document.createElement('div');
+                    routeTile.className = 'tile route';
+                    routeTile.innerHTML = `
+                        <input type="hidden" class="route-id" value="${returnedRouteId}">
+                        <strong>${from} → ${to}</strong><br>
+                        <small>${directOnly}</small><br>
+                        <small>От ${dateBegin} до ${dateEnd}</small><br>
+                        <small>Частота проверки: ${selectedFrequencyLabel}</small>
+                        <a href="/ticket_data/current?route_id=${returnedRouteId}" class="link_inner" id="current">
+                            Самый дешёвый билет сейчас
+                        </a>
+                        <a href="/ticket_data/cheapest?route_id=${returnedRouteId}" class="link_inner" id="cheapest">
+                            Самый дешёвый билет за время наблюдения</a>
+                        <a href="/ticket_data/statistic?route_id=${returnedRouteId}" class="link_inner" id="statistic">
+                            Статистика</a>
+                        <button class="delete-route">Удалить маршрут</button>
+                    `;
+                    container.insertBefore(routeTile, addTile);
+                    routeTile.querySelector('.delete-route').addEventListener('click', () => {
+                        deleteRoute(routeTile); // Удаляем маршрут
+                    });
+                })
+                .catch(error => {
+                    // Если произошла ошибка, скрываем полупрозрачный слой и выводим ошибку
+                    overlay.style.display = 'none';
+                    alert(error.message);
                 });
 
+                // Перед отправкой запроса показываем полупрозрачный слой
+                overlay.style.display = 'flex';
+
+
+                // Сбрасываем поля
                 document.getElementById('from').value = '';
                 document.getElementById('to').value = '';
-
                 document.getElementById('directOnly').checked = false;
                 document.querySelector('input[name="frequency"][value="24"]').checked = true;
+                document.getElementById('date_begin').value = '';
+                document.getElementById('date_end').value = '';
 
                 addModal.style.display = 'none';
             } else {
                 alert('Заполните поля "Город отправления" и "Город назначения"!');
             }
-        });
+    });
 
-        addModal.addEventListener('click', (e) => {
-            if (e.target === addModal) {
-                addModal.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>

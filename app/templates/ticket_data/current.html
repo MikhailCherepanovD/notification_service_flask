@@ -1,46 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Cheapest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Текущий билет</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
         }
         .container {
-            width: 60%;
+            max-width: 600px;
             margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
         }
         .ticket {
-            border: 1px solid #ccc;
+            background: #ffffff;
             padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 20px;
+        }
+        .ticket p {
+            margin: 8px 0;
         }
         .ticket a {
-            display: block;
+            display: inline-block;
             margin-top: 10px;
-            color: blue;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .ticket a:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>Current</h1>
-
-    {% if json_data %}
-        <div class="ticket">
-            <p><strong>Авиакомпания:</strong> {{ json_data.airline }}</p>
-            <p><strong>Рейс:</strong> {{ json_data.flight_number }}</p>
-            <p><strong>Отправление:</strong> {{ json_data.departure_at }}</p>
-            <p><strong>Откуда:</strong> {{ json_data.origin }} ({{ json_data.origin_airport }})</p>
-            <p><strong>Куда:</strong> {{ json_data.destination }} ({{ json_data.destination_airport }})</p>
-            <p><strong>Цена:</strong> {{ json_data.price }} ₽</p>
-            <p><strong>Длительность:</strong> {{ json_data.duration_to }} мин</p>
-            <p><a href="{{ json_data.link }}" target="_blank">Ссылка на билет</a></p>
-        </div>
-    {% else %}
-        <p>Информация о билетах отсутствует</p>
-    {% endif %}
-
+    <div class="container">
+        <h1>Текущий билет</h1>
+        {% if json_data %}
+            <div class="ticket">
+                <p><strong>Авиакомпания:</strong> {{ json_data.airline }}</p>
+                <p><strong>Рейс:</strong> {{ json_data.flight_number }}</p>
+                <p><strong>Отправление:</strong> {{ json_data.departure_at }}</p>
+                <p><strong>Откуда:</strong> {{ json_data.origin }} ({{ json_data.origin_airport }})</p>
+                <p><strong>Куда:</strong> {{ json_data.destination }} ({{ json_data.destination_airport }})</p>
+                <p><strong>Цена:</strong> {{ json_data.price }} ₽</p>
+                <p><strong>Длительность:</strong> {{ json_data.duration_to }} мин</p>
+                <a href="{{ json_data.link }}" target="_blank">Перейти к бронированию</a>
+            </div>
+        {% else %}
+            <p>Информация о билете отсутствует</p>
+        {% endif %}
+    </div>
 </body>
 </html>

@@ -1,48 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Cheapest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика билетов</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
         }
         .container {
-            width: 60%;
+            max-width: 800px;
             margin: auto;
         }
         .ticket {
-            border: 1px solid #ccc;
+            background: white;
             padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .ticket h2 {
+            margin: 0;
+            color: #007bff;
+        }
+        .ticket p {
+            margin: 5px 0;
         }
         .ticket a {
-            display: block;
+            display: inline-block;
             margin-top: 10px;
-            color: blue;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .ticket a:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Statistic</h1>
-    {% if json_data %}
-        {% for ticket in json_data %}
-        <div class="ticket">
-            <p><strong>Авиакомпания:</strong> {{ ticket.airline }}</p>
-            <p><strong>Рейс:</strong> {{ ticket.flight_number }}</p>
-            <p><strong>Отправление:</strong> {{ ticket.origin }} ({{ ticket.origin_airport }})</p>
-            <p><strong>Прибытие:</strong> {{ ticket.destination }} ({{ ticket.destination_airport }})</p>
-            <p><strong>Время вылета:</strong> {{ ticket.departure_at }}</p>
-            <p><strong>Длительность:</strong> {{ ticket.duration }} мин.</p>
-            <p><strong>Цена:</strong> {{ ticket.price }} RUB</p>
-            <a href="{{ ticket.link }}" target="_blank">Купить билет</a>
-        </div>
+    <div class="container">
+        <h1>Статистика билетов</h1>
+        {% for entry in json_data %}
+            {% set ticket = entry.data | fromjson %}
+            <div class="ticket">
+                <h2>Проверка: {{ entry.time_of_checking }}</h2>
+                <p><strong>Авиакомпания:</strong> {{ ticket.airline }}</p>
+                <p><strong>Рейс:</strong> {{ ticket.flight_number }}</p>
+                <p><strong>Отправление:</strong> {{ ticket.origin }} ({{ ticket.origin_airport }})</p>
+                <p><strong>Прибытие:</strong> {{ ticket.destination }} ({{ ticket.destination_airport }})</p>
+                <p><strong>Время вылета:</strong> {{ ticket.departure_at }}</p>
+                <p><strong>Длительность полета:</strong> {{ ticket.duration }} минут</p>
+                <p><strong>Количество пересадок:</strong> {{ ticket.transfers }}</p>
+                <p><strong>Цена:</strong> {{ ticket.price }} руб.</p>
+<!--                <a href="{{ ticket.link }}" target="_blank">Перейти к бронированию</a>-->
+            </div>
         {% endfor %}
-    {% else %}
-        <p>Информация о билетах отсутствует.</p>
-    {% endif %}
-</div>
+    </div>
 </body>
 </html>

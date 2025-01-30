@@ -385,6 +385,7 @@
 
             // Получаем текущую дату
             const today = new Date();
+            today.setDate(today.getDate() - 1);
             const twoYearsLater = new Date();
             twoYearsLater.setFullYear(today.getFullYear() + 2);
 

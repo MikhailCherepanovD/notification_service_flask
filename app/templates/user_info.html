@@ -96,6 +96,21 @@
         <a href="/personal_account" class="link_outer" id="back">Назад</a>
     </form>
   </div>
+<script>
+    function confirmAction(event) {
+        const form = event.target;
+        const action = form.querySelector('button[type="submit"]:focus').value; // Определяем, какая кнопка была нажата
 
+        // Если нажата кнопка "Удалить аккаунт", убираем обязательность полей
+        if (action === "delete") {
+            // Убираем атрибут required у конкретных полей
+            document.getElementById('username').removeAttribute('required');
+            document.getElementById('login').removeAttribute('required');
+            document.getElementById('password').removeAttribute('required');
+            document.getElementById('repeat_password').removeAttribute('required');
+        }
+        return true; // Продолжаем отправку формы
+    }
+  </script>
 </body>
 </html>

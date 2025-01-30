@@ -1,11 +1,14 @@
 import logging
 import os
 from operator import truediv
-
 from flask import Request
 import requests
+import hashlib
 
-GLOBAL_COUNTER: int = 0
+def hash_password(password: str) -> str:
+    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    return hashed_password
+
 def get_name_frequency_by_value(str_value: str) -> str:
     name_matching = {
         '1': 'Каждый час',
@@ -20,6 +23,27 @@ def get_name_frequency_by_value(str_value: str) -> str:
     else:
         return "".join(["Каждые ", str_value, " часов"])
 
+
+def get_value_frequency_by_name(value: str) -> str:
+    name_matching_reverse = {
+        'Каждый час': '1',
+        'Каждые 6 часов': '6',
+        'Каждые 12 часов': '12',
+        'Каждые 24 часа': '24',
+        'Каждые 2 дня': '48',
+        'Раз в неделю': '168',
+    }
+
+    if value in name_matching_reverse:
+        return name_matching_reverse[value]
+    else:
+        # Для случаев, где частота задана в формате "Каждые X часов"
+        if value.startswith("Каждые") and "час" in value:
+            hours = value.split()[1]  # Извлекаем число (например, "6" из "Каждые 6 часов")
+            return hours
+        return ""  # Возвращаем пустую строку, если не нашли совпадений
+
+
 def get_direct_by_name(str_value:str) -> str:
     if str_value=="Только без пересадок":
         return "true"
@@ -28,7 +52,7 @@ def get_direct_by_name(str_value:str) -> str:
 def get_status_and_info_by_login_request(request: Request) -> tuple:
     """0 - успешный вход, 1 - пользователь не найден, 2 - внешняя ошибка сервера"""
     login = request.form["login"]
-    password = request.form["password"]
+    password = hash_password(request.form["password"])
     data = {
         'login': login,
         'password': password
@@ -69,7 +93,7 @@ def user_create_or_update(request: Request,user_id=None) -> int:
     data = {
         'login': login,
         'user_name': user_name,
-        'password': password,
+        'password': hash_password(password),
         'email':email,
         'telegram': telegram
     }

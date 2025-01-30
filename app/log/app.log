@@ -1,33 +1,6 @@
-2025-01-30 16:50:09 [WARNING]  * Debugger is active!
-2025-01-30 16:50:09 [INFO]  * Debugger PIN: 705-878-325
-2025-01-30 16:50:12 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:12] "GET / HTTP/1.1" 200 -
-2025-01-30 16:50:13 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:13] "GET /login HTTP/1.1" 200 -
-2025-01-30 16:50:18 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:18] "GET /register HTTP/1.1" 200 -
-2025-01-30 16:50:28 [INFO] User e: success creating.
-2025-01-30 16:50:28 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:28] "POST /register HTTP/1.1" 200 -
-2025-01-30 16:50:32 [INFO] User e: successful login
-2025-01-30 16:50:32 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:32] "[32mPOST /login HTTP/1.1[0m" 302 -
-2025-01-30 16:50:32 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:32] "GET /personal_account HTTP/1.1" 200 -
-2025-01-30 16:50:49 [INFO] Вызван метод GET
-2025-01-30 16:50:49 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:49] "GET /user_info HTTP/1.1" 200 -
-2025-01-30 16:50:58 [INFO] User e: deleted.
-2025-01-30 16:50:58 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:58] "[32mPOST /user_info HTTP/1.1[0m" 302 -
-2025-01-30 16:50:58 [INFO] 127.0.0.1 - - [30/Jan/2025 16:50:58] "GET / HTTP/1.1" 200 -
-2025-01-30 16:51:02 [INFO] 127.0.0.1 - - [30/Jan/2025 16:51:02] "GET /login HTTP/1.1" 200 -
-2025-01-30 16:51:09 [INFO] 127.0.0.1 - - [30/Jan/2025 16:51:09] "GET /register HTTP/1.1" 200 -
-2025-01-30 16:51:21 [INFO] User a: success creating.
-2025-01-30 16:51:21 [INFO] 127.0.0.1 - - [30/Jan/2025 16:51:21] "POST /register HTTP/1.1" 200 -
-2025-01-30 16:51:25 [INFO] User a: successful login
-2025-01-30 16:51:25 [INFO] 127.0.0.1 - - [30/Jan/2025 16:51:25] "[32mPOST /login HTTP/1.1[0m" 302 -
-2025-01-30 16:51:25 [INFO] 127.0.0.1 - - [30/Jan/2025 16:51:25] "GET /personal_account HTTP/1.1" 200 -
-2025-01-30 16:51:46 [INFO] Route №NnN: error creating.
-2025-01-30 16:51:46 [INFO] 127.0.0.1 - - [30/Jan/2025 16:51:46] "[31m[1mPOST /routes HTTP/1.1[0m" 400 -
-2025-01-30 16:52:08 [INFO] Route №NnN: error creating.
-2025-01-30 16:52:08 [INFO] 127.0.0.1 - - [30/Jan/2025 16:52:08] "[35m[1mPOST /routes HTTP/1.1[0m" 204 -
-2025-01-30 16:52:25 [INFO] Route №NnN: error creating.
-2025-01-30 16:52:25 [INFO] 127.0.0.1 - - [30/Jan/2025 16:52:25] "[35m[1mPOST /routes HTTP/1.1[0m" 204 -
-2025-01-30 16:52:46 [INFO] Route 90: successful created.
-2025-01-30 16:52:46 [INFO] 127.0.0.1 - - [30/Jan/2025 16:52:46] "[35m[1mPOST /routes HTTP/1.1[0m" 201 -
-2025-01-30 16:52:49 [INFO] 127.0.0.1 - - [30/Jan/2025 16:52:49] "GET /ticket_data/cheapest?route_id=90 HTTP/1.1" 200 -
-2025-01-30 16:52:52 [INFO] 127.0.0.1 - - [30/Jan/2025 16:52:52] "GET /ticket_data/current?route_id=90 HTTP/1.1" 200 -
-2025-01-30 16:52:56 [INFO] 127.0.0.1 - - [30/Jan/2025 16:52:56] "GET / HTTP/1.1" 200 -
+2025-01-30 17:03:50 [WARNING]  * Debugger is active!
+2025-01-30 17:03:50 [INFO]  * Debugger PIN: 705-878-325
+2025-01-30 17:03:54 [INFO] 127.0.0.1 - - [30/Jan/2025 17:03:54] "GET /login HTTP/1.1" 200 -
+2025-01-30 17:04:00 [INFO] User a: successful login
+2025-01-30 17:04:00 [INFO] 127.0.0.1 - - [30/Jan/2025 17:04:00] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-01-30 17:04:00 [INFO] 127.0.0.1 - - [30/Jan/2025 17:04:00] "GET /personal_account HTTP/1.1" 200 -

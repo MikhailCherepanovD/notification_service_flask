@@ -1,22 +1,24 @@
 import logging
+
 import os
-from operator import truediv
 from flask import Request
 import requests
 import hashlib
 
+
 def hash_password(password: str) -> str:
-    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
     return hashed_password
+
 
 def get_name_frequency_by_value(str_value: str) -> str:
     name_matching = {
-        '1': 'Каждый час',
-        '6': 'Каждые 6 часов',
-        '12': 'Каждые 12 часов',
-        '24': 'Каждые 24 часа',
-        '48': 'Каждые 2 дня',
-        '168': 'Раз в неделю',
+        "1": "Каждый час",
+        "6": "Каждые 6 часов",
+        "12": "Каждые 12 часов",
+        "24": "Каждые 24 часа",
+        "48": "Каждые 2 дня",
+        "168": "Раз в неделю",
     }
     if str_value in name_matching:
         return name_matching[str_value]
@@ -26,60 +28,60 @@ def get_name_frequency_by_value(str_value: str) -> str:
 
 def get_value_frequency_by_name(value: str) -> str:
     name_matching_reverse = {
-        'Каждый час': '1',
-        'Каждые 6 часов': '6',
-        'Каждые 12 часов': '12',
-        'Каждые 24 часа': '24',
-        'Каждые 2 дня': '48',
-        'Раз в неделю': '168',
+        "Каждый час": "1",
+        "Каждые 6 часов": "6",
+        "Каждые 12 часов": "12",
+        "Каждые 24 часа": "24",
+        "Каждые 2 дня": "48",
+        "Раз в неделю": "168",
     }
 
     if value in name_matching_reverse:
         return name_matching_reverse[value]
     else:
-        # Для случаев, где частота задана в формате "Каждые X часов"
         if value.startswith("Каждые") and "час" in value:
-            hours = value.split()[1]  # Извлекаем число (например, "6" из "Каждые 6 часов")
+            hours = value.split()[
+                1
+            ]  # Извлекаем число (например, "6" из "Каждые 6 часов")
             return hours
         return ""  # Возвращаем пустую строку, если не нашли совпадений
 
 
-def get_direct_by_name(str_value:str) -> str:
-    if str_value=="Только без пересадок":
+def get_direct_by_name(str_value: str) -> str:
+    if str_value == "Только без пересадок":
         return "true"
     return "false"
+
 
 def get_status_and_info_by_login_request(request: Request) -> tuple:
     """0 - успешный вход, 1 - пользователь не найден, 2 - внешняя ошибка сервера"""
     login = request.form["login"]
     password = hash_password(request.form["password"])
-    data = {
-        'login': login,
-        'password': password
-    }
-    response_user = requests.post( os.getenv("LOGIN_URL"), json=data)
+    data = {"login": login, "password": password}
+    response_user = requests.post(os.getenv("LOGIN_URL"), json=data)
     if response_user.status_code == requests.codes.unauthorized:
         logging.info(f"User {login}: wrong login or password")
-        return 1,None
+        return 1, None
     if response_user.status_code == requests.codes.ok:
         mp = dict()
-        mp['email'] = response_user.json()['email']
-        mp['id'] = response_user.json()['id']
-        mp['login'] = response_user.json()['login']
-        mp['telegram'] = response_user.json()['telegram']
-        mp['user_name'] = response_user.json()['user_name']
-        response_routes = requests.get("".join([os.getenv("USERS_URL"),'/', str(mp['id']),'/', "routes"]))
+        mp["email"] = response_user.json()["email"]
+        mp["id"] = response_user.json()["id"]
+        mp["login"] = response_user.json()["login"]
+        mp["telegram"] = response_user.json()["telegram"]
+        mp["user_name"] = response_user.json()["user_name"]
+        response_routes = requests.get(
+            "".join([os.getenv("USERS_URL"), "/", str(mp["id"]), "/", "routes"])
+        )
         print(response_routes.status_code)
         if response_routes.status_code == requests.codes.ok:
-            mp['routes'] = response_routes.json()
-        #print(mp)
+            mp["routes"] = response_routes.json()
         logging.info(f"User {login}: successful login")
-        return 0,mp
+        return 0, mp
     logging.info(f"External server error")
     return 2, None
 
 
-def user_create_or_update(request: Request,user_id=None) -> int:
+def user_create_or_update(request: Request, user_id=None) -> int:
     """0 - регистрация успешна, 1 - пароли не совпадают, 2 - пользователь с таким логином уже существует, 3 - внешняя ошибка сервера"""
     user_name = request.form["username"]
     email = request.form["email"]
@@ -91,17 +93,17 @@ def user_create_or_update(request: Request,user_id=None) -> int:
         logging.info(f"User {login}: passwords don't match.")
         return 1
     data = {
-        'login': login,
-        'user_name': user_name,
-        'password': hash_password(password),
-        'email':email,
-        'telegram': telegram
+        "login": login,
+        "user_name": user_name,
+        "password": hash_password(password),
+        "email": email,
+        "telegram": telegram,
     }
     if user_id is None:
         url = os.getenv("REGISTER_URL")
         response = requests.post(url, json=data)
     else:
-        url = os.getenv("USERS_URL")+"/"+user_id
+        url = os.getenv("USERS_URL") + "/" + user_id
         response = requests.put(url, json=data)
 
     if response.status_code == 201:

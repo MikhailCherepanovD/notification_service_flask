@@ -1,12 +1,10 @@
-from flask import Flask,render_template, request, session, Response,  redirect, url_for
+from flask import render_template, request, session, Response, redirect, url_for
 from app import app
-from app.forms import LoginForm  # Импортируем форму
 from app.registration_functions import *
-import time
 import json
 import logging
-from jinja2 import Environment, select_autoescape
-app.jinja_env.filters['fromjson'] = lambda x: eval(x)  # Быстрый, но небезопасный способ
+
+app.jinja_env.filters["fromjson"] = lambda x: eval(x)  # Быстрый, но небезопасный способ
 
 
 @app.route("/")
@@ -20,7 +18,7 @@ def login():
     session.clear()
     if request.method == "POST":  # метод POST будет вызван при нажатии на кнопку
         login_status, user_info = get_status_and_info_by_login_request(request)
-        if login_status==0:
+        if login_status == 0:
             session["id"] = user_info["id"]
             session["login"] = user_info["login"]
             session["user_name"] = user_info["user_name"]
@@ -34,8 +32,14 @@ def login():
                         "id": route["route_monitoring_id"],
                         "start_time": route["start_time_monitoring"][:10],
                         "finish_time": route["finish_time_monitoring"][:10],
-                        "frequency_monitoring": get_name_frequency_by_value(str(route["frequency_monitoring"])),
-                        "transfers_are_allowed": "" if route["transfers_are_allowed"] == True else "Только без пересадок"
+                        "frequency_monitoring": get_name_frequency_by_value(
+                            str(route["frequency_monitoring"])
+                        ),
+                        "transfers_are_allowed": (
+                            ""
+                            if route["transfers_are_allowed"] == True
+                            else "Только без пересадок"
+                        ),
                     }
                     for route in user_info["routes"]
                 ]
@@ -58,6 +62,7 @@ def get_register():
     session.clear()
     return render_template("register.html")
 
+
 @app.route("/register", methods=["POST"])
 def post_register():
     session.clear()
@@ -75,16 +80,19 @@ def post_register():
         return render_template("register.html", error_message=error_message)
 
 
-
 @app.route("/user_info", methods=["GET"])
 def get_user_info():
     if "id" not in session:
         return Response(status=403)
-    user_info_strs = [session["user_name"],session["email"],session["telegram"],session["login"]]
+    user_info_strs = [
+        session["user_name"],
+        session["email"],
+        session["telegram"],
+        session["login"],
+    ]
     if request.method == "GET":
         logging.info("Вызван метод GET")
         return render_template("user_info.html", user_info_strs=user_info_strs)
-
 
 
 @app.route("/user_info", methods=["POST"])
@@ -92,7 +100,7 @@ def post_user_info():
     if "id" not in session:
         return Response(status=403)
     if request.form.get("action") == "update":
-        update_status = user_create_or_update(request,str(session["id"]))
+        update_status = user_create_or_update(request, str(session["id"]))
         if update_status == 0:
             session["login"] = request.form["login"]
             session["user_name"] = request.form["username"]
@@ -114,7 +122,7 @@ def post_user_info():
         if response.status_code == 200:
             logging.info(f"User {session["login"]}: deleted.")
             session.clear()
-            return redirect(url_for('index'))
+            return redirect(url_for("index"))
         else:
             logging.info(f"User {session["login"]}: error deleting.")
             error_message = "Произошла внутренняя ошибка сервера. Попробуйте позже."
@@ -125,18 +133,29 @@ def post_user_info():
 def personal_account():
     if "id" not in session:
         return Response(status=403)
-    return render_template("personal_account.html",routes=session["routes"])
+    return render_template("personal_account.html", routes=session["routes"])
+
 
 @app.route("/routes", methods=["DELETE"])
 def delete_route():
     if "id" not in session:
         return Response(status=403)
     data_journey = request.get_json()
-    routes_url = os.getenv("USERS_URL") + "/" + str(session["id"]) + "/routes/" + str(data_journey["id"])
+    routes_url = (
+        os.getenv("USERS_URL")
+        + "/"
+        + str(session["id"])
+        + "/routes/"
+        + str(data_journey["id"])
+    )
     response = requests.delete(routes_url)
-    if response.status_code==200:
+    if response.status_code == 200:
         logging.info(f"Route {str(data_journey["id"])}: deleted.")
-        session["routes"] = [route for route in session["routes"] if str(route["id"]) != str(data_journey["id"])]
+        session["routes"] = [
+            route
+            for route in session["routes"]
+            if str(route["id"]) != str(data_journey["id"])
+        ]
     else:
         logging.info(f"Route {str(data_journey["id"])}: error deleting.")
     return Response(status=response.status_code)
@@ -153,15 +172,17 @@ def post_route():
         "origin": data_journey["from"],
         "destination": data_journey["to"],
         "type_of_journey": "avia",
-        "frequency_of_monitoring": get_value_frequency_by_name(data_journey["frequency"]),# поправить
-        "type_frequency_of_monitoring":"minutes", # поправить
+        "frequency_of_monitoring": get_value_frequency_by_name(
+            data_journey["frequency"]
+        ),  # поправить
+        "type_frequency_of_monitoring": "minutes",  # поправить
         "begin_date_monitoring": data_journey["dateBegin"],
         "end_date_monitoring": data_journey["dateEnd"],
-        "direct":get_direct_by_name(data_journey["directOnly"])
+        "direct": get_direct_by_name(data_journey["directOnly"]),
     }
-    response = requests.post(routes_url,json=body_request)
-    if response.status_code==201:
-        returned_route_id = response.headers.get('Location').split('/')[-1]
+    response = requests.post(routes_url, json=body_request)
+    if response.status_code == 201:
+        returned_route_id = response.headers.get("Location").split("/")[-1]
         logging.info(f"Route {str(returned_route_id)}: successful created.")
         new_route = {
             "start_city": data_journey["from"],
@@ -169,22 +190,38 @@ def post_route():
             "id": returned_route_id,  # уникальный ID для нового маршрута
             "start_time": data_journey["dateBegin"],
             "finish_time": data_journey["dateEnd"],
-            "frequency_monitoring": data_journey["frequency"], # исправить
-            "transfers_are_allowed": "" if get_direct_by_name(data_journey["directOnly"]) == True else "Только без пересадок"
+            "frequency_monitoring": data_journey["frequency"],  # исправить
+            "transfers_are_allowed": (
+                ""
+                if get_direct_by_name(data_journey["directOnly"]) == True
+                else "Только без пересадок"
+            ),
         }
         session["routes"].append(new_route)
-        return Response(json.dumps({"id": returned_route_id}),status=201,content_type='application/json')
+        return Response(
+            json.dumps({"id": returned_route_id}),
+            status=201,
+            content_type="application/json",
+        )
     logging.info(f"Route №NnN: error creating.")
     return Response(status=response.status_code)
+
 
 @app.route("/ticket_data/cheapest", methods=["GET"])
 def cheapest():
     if "id" not in session:
         return Response(status=403)
     route_id = request.args.get("route_id")
-    url = os.getenv("USERS_URL") + "/" + str(session["id"]) + "/routes/"+route_id+"/cheapest"
+    url = (
+        os.getenv("USERS_URL")
+        + "/"
+        + str(session["id"])
+        + "/routes/"
+        + route_id
+        + "/cheapest"
+    )
     response = requests.get(url)
-    if response.status_code==200:
+    if response.status_code == 200:
         data = response.json()
         print(data)
         return render_template("ticket_data/cheapest.html", json_data=data)
@@ -196,9 +233,16 @@ def current():
     if "id" not in session:
         return Response(status=403)
     route_id = request.args.get("route_id")
-    url = os.getenv("USERS_URL") + "/" + str(session["id"]) + "/routes/"+route_id+"/current"
+    url = (
+        os.getenv("USERS_URL")
+        + "/"
+        + str(session["id"])
+        + "/routes/"
+        + route_id
+        + "/current"
+    )
     response = requests.get(url)
-    if response.status_code==200:
+    if response.status_code == 200:
         data = response.json()
         print(data)
         return render_template("ticket_data/current.html", json_data=data)
@@ -210,9 +254,16 @@ def statistic():
     if "id" not in session:
         return Response(status=403)
     route_id = request.args.get("route_id")
-    url = os.getenv("USERS_URL") + "/" + str(session["id"]) + "/routes/"+route_id+"/statistic"
+    url = (
+        os.getenv("USERS_URL")
+        + "/"
+        + str(session["id"])
+        + "/routes/"
+        + route_id
+        + "/statistic"
+    )
     response = requests.get(url)
-    if response.status_code==200:
+    if response.status_code == 200:
         data = response.json()
         print(data)
         return render_template("ticket_data/statistic.html", json_data=data)

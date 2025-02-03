@@ -339,7 +339,7 @@
 
                         routeTile.remove();  // Ожидаем ответа от сервера, если статус 200
                     } else {
-                        alert('Не удалось удалить маршрут');
+                        alert('Не удалось удалить маршрут. Внутренняя ошибка сервера.');
                     }
                 });
             }
@@ -462,7 +462,9 @@
                         throw new Error('Не удалось найти билетов на указанные даты.');
                     } else if (response.status === 400) {
                         throw new Error('Указанных городов нет в нашей базе.');
-                    } else {
+                    } else if (response.status === 500){
+                        throw new Error('Не удалось добавить маршрут.Внутренняя ошибка сервера.');
+                    } else{
                         throw new Error(response.status);
                     }
                 })

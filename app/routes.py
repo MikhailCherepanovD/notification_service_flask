@@ -17,7 +17,12 @@ def index():
 def login():
     session.clear()
     if request.method == "POST":  # метод POST будет вызван при нажатии на кнопку
-        login_status, user_info = get_status_and_info_by_login_request(request)
+        try:
+            login_status, user_info = get_status_and_info_by_login_request(request)
+        except:
+            logging.error(f"Internal server unavailable.")
+            error_message = "Сервер временно недоступен. Попробуйте позже."
+            return render_template("login.html", error_message=error_message)
         if login_status == 0:
             session["id"] = user_info["id"]
             session["login"] = user_info["login"]
@@ -45,7 +50,7 @@ def login():
                 ]
             else:
                 session["routes"] = []
-            print(session["routes"])
+            #print(session["routes"])
             return redirect(url_for("personal_account"))
         elif login_status == 1:
             error_message = "Пользователь не найден. Пароль или логин указаны неверно."
@@ -66,7 +71,12 @@ def get_register():
 @app.route("/register", methods=["POST"])
 def post_register():
     session.clear()
-    register_status = user_create_or_update(request)
+    try:
+        register_status = user_create_or_update(request)
+    except:
+        logging.error(f"Internal server unavailable.")
+        error_message = "Сервер временно недоступен. Попробуйте позже."
+        return render_template("register.html", error_message=error_message)
     if register_status == 0:
         return render_template("login.html")
     elif register_status == 1:
@@ -100,7 +110,13 @@ def post_user_info():
     if "id" not in session:
         return Response(status=403)
     if request.form.get("action") == "update":
-        update_status = user_create_or_update(request, str(session["id"]))
+        try:
+            update_status = user_create_or_update(request, str(session["id"]))
+        except:
+            logging.error(f"Internal server unavailable.")
+            session.clear()
+            error_message = "Сервер временно недоступен. Попробуйте позже."
+            return render_template("login.html", error_message=error_message)
         if update_status == 0:
             session["login"] = request.form["login"]
             session["user_name"] = request.form["username"]
@@ -148,7 +164,13 @@ def delete_route():
         + "/routes/"
         + str(data_journey["id"])
     )
-    response = requests.delete(routes_url)
+    try:
+        response = requests.delete(routes_url)
+    except:
+        logging.error(f"Internal server unavailable.")
+        session.clear()
+        return Response(status=500)
+
     if response.status_code == 200:
         logging.info(f"Route {str(data_journey["id"])}: deleted.")
         session["routes"] = [
@@ -166,7 +188,7 @@ def post_route():
     if "id" not in session:
         return Response(status=403)
     data_journey = request.get_json()
-    print(data_journey)
+    #print(data_journey)
     routes_url = os.getenv("USERS_URL") + "/" + str(session["id"]) + "/routes"
     body_request = {
         "origin": data_journey["from"],
@@ -175,12 +197,19 @@ def post_route():
         "frequency_of_monitoring": get_value_frequency_by_name(
             data_journey["frequency"]
         ),  # поправить
-        "type_frequency_of_monitoring": "minutes",  # поправить
+        "type_frequency_of_monitoring": "hours",  # поправить
         "begin_date_monitoring": data_journey["dateBegin"],
         "end_date_monitoring": data_journey["dateEnd"],
         "direct": get_direct_by_name(data_journey["directOnly"]),
     }
-    response = requests.post(routes_url, json=body_request)
+
+    try:
+        response = requests.post(routes_url, json=body_request)
+    except:
+        logging.error(f"Internal server unavailable.")
+        session.clear()
+        return Response(status=500)
+
     if response.status_code == 201:
         returned_route_id = response.headers.get("Location").split("/")[-1]
         logging.info(f"Route {str(returned_route_id)}: successful created.")
@@ -220,10 +249,17 @@ def cheapest():
         + route_id
         + "/cheapest"
     )
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except:
+        logging.error(f"Internal server unavailable.")
+        session.clear()
+        error_message = "Сервер временно недоступен. Попробуйте позже."
+        return render_template("login.html", error_message=error_message)
+
     if response.status_code == 200:
         data = response.json()
-        print(data)
+        #print(data)
         return render_template("ticket_data/cheapest.html", json_data=data)
     return render_template("ticket_data/cheapest.html")
 
@@ -241,10 +277,16 @@ def current():
         + route_id
         + "/current"
     )
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except:
+        logging.error(f"Internal server unavailable.")
+        session.clear()
+        error_message = "Сервер временно недоступен. Попробуйте позже."
+        return render_template("login.html", error_message=error_message)
     if response.status_code == 200:
         data = response.json()
-        print(data)
+        #print(data)
         return render_template("ticket_data/current.html", json_data=data)
     return render_template("ticket_data/current.html")
 
@@ -262,9 +304,15 @@ def statistic():
         + route_id
         + "/statistic"
     )
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except:
+        logging.error(f"Internal server unavailable.")
+        session.clear()
+        error_message = "Сервер временно недоступен. Попробуйте позже."
+        return render_template("login.html", error_message=error_message)
     if response.status_code == 200:
         data = response.json()
-        print(data)
+        #print(data)
         return render_template("ticket_data/statistic.html", json_data=data)
     return render_template("ticket_data/statistic.html")

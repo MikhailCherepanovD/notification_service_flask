@@ -1,6 +1,2 @@
-2025-01-30 17:03:50 [WARNING]  * Debugger is active!
-2025-01-30 17:03:50 [INFO]  * Debugger PIN: 705-878-325
-2025-01-30 17:03:54 [INFO] 127.0.0.1 - - [30/Jan/2025 17:03:54] "GET /login HTTP/1.1" 200 -
-2025-01-30 17:04:00 [INFO] User a: successful login
-2025-01-30 17:04:00 [INFO] 127.0.0.1 - - [30/Jan/2025 17:04:00] "[32mPOST /login HTTP/1.1[0m" 302 -
-2025-01-30 17:04:00 [INFO] 127.0.0.1 - - [30/Jan/2025 17:04:00] "GET /personal_account HTTP/1.1" 200 -
+2025-02-03 17:59:24 [WARNING]  * Debugger is active!
+2025-02-03 17:59:24 [INFO]  * Debugger PIN: 127-124-620

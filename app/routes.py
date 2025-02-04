@@ -136,11 +136,11 @@ def post_user_info():
         url = os.getenv("USERS_URL") + "/" + str(session["id"])
         response = requests.delete(url)
         if response.status_code == 200:
-            logging.info(f"User {session["login"]}: deleted.")
+            logging.info(f"User {session['login']}: deleted.")
             session.clear()
             return redirect(url_for("index"))
         else:
-            logging.info(f"User {session["login"]}: error deleting.")
+            logging.info(f"User {session['login']}: error deleting.")
             error_message = "Произошла внутренняя ошибка сервера. Попробуйте позже."
             return render_template("user_info.html", error_message=error_message)
 
@@ -172,14 +172,14 @@ def delete_route():
         return Response(status=500)
 
     if response.status_code == 200:
-        logging.info(f"Route {str(data_journey["id"])}: deleted.")
+        logging.info(f"Route {str(data_journey['id'])}: deleted.")
         session["routes"] = [
             route
             for route in session["routes"]
             if str(route["id"]) != str(data_journey["id"])
         ]
     else:
-        logging.info(f"Route {str(data_journey["id"])}: error deleting.")
+        logging.info(f"Route {str(data_journey['id'])}: error deleting.")
     return Response(status=response.status_code)
 
 

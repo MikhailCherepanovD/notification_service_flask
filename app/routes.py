@@ -151,6 +151,9 @@ def personal_account():
         return Response(status=403)
     return render_template("personal_account.html", routes=session["routes"])
 
+@app.route("/guide", methods=["GET"])
+def guide():
+    return render_template("guide.html")
 
 @app.route("/routes", methods=["DELETE"])
 def delete_route():

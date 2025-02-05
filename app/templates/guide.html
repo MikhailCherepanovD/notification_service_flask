@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Справка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            font-size: 19px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+        }
+        .ticket {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 20px;
+        }
+        .ticket p {
+            margin: 8px 0;
+        }
+        .ticket a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .ticket a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Справка</h1>
+        <div class="content">
+            <p>Сервис позволяет установить на отслеживания цен на один или несколько билетов на самолет на определенный промежуток дат.<br>
+                Для каждого из билетов можно установить свой интервал проверки, например: "Раз в 6 часов". <br>
+                В таком случае раз в 6 часов, на указанную почту и телеграм будет приходить информация о текущем(на время проверки)
+                самом дешевом билете из заданного промежутка отслеживания.  <br><br>
+
+                <b>Важно: </b>Чтобы сервер мог отправлять сообщения в телеграм,
+                необходимо с указанного при регистрации телеграм аккаунта отправить сообщение <b>/start</b> нашему телеграм боту:
+                <b><a href="https://t.me/RuTicketDragonBot" target="_blank">@RuTicketDragonBot</a></b>,
+                поскольку телеграм запрещает ботам первыми писать пользователям.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
